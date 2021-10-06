@@ -1,0 +1,10 @@
+# python virtual environment
+venv
+
+# terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+
+# personal notes
+notes
