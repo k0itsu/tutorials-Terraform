@@ -21,6 +21,14 @@ words = {
         "chubby",
         "grumpy"
     ]
+    verbs = [
+        "run",
+        "dance",
+        "love",
+        "respect",
+        "kicked",
+        "baked"
+    ]
     adverbs = [
         "delicately",
         "beautifully",
@@ -36,3 +44,4 @@ words = {
         -5,
         0
     ]
+}
