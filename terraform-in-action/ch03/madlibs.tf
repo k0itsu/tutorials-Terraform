@@ -5,6 +5,14 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.0"
     }
+    local = {
+      source  = "hashicorp/random"
+      version = "~> 2.0"
+    }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0"
+    }
   }
 }
 
@@ -58,6 +66,10 @@ resource "random_shuffle" "random_numbers" {
   input = local.uppercase_words["numbers"]
 }
 
+locals {
+  templates = tolist(fileset(path.module, "templates/*.txt"))
+}
+
 # output "mad_libs" {
 #   # path.module is a reference to the filesystem path of the
 #   # containing module
@@ -82,4 +94,11 @@ resource "local_file" "mad_libs" {
       adverbs    = random_shuffle.random_adverbs[count.index].result
       numbers    = random_shuffle.random_numbers[count.index].result
   })
+}
+
+data "archive_file" "mad_libs" {
+  depends_on  = [local_file.mad_libs]
+  type        = "zip"
+  source_dir  = "${path.module}/madlibs"
+  output_path = "${path.cwd}/madlibs.zip"
 }
