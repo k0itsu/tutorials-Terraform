@@ -24,24 +24,38 @@ variable "words" {
   }
 }
 
+variable "num_files" {
+  default = 100
+  type    = number
+}
+
+locals {
+  uppercase_words = {for k, v in var.words : k => [for s in v : upper(s)]}
+}
+
 resource "random_shuffle" "random_nouns" {
-  input = var.words["nouns"]
+  count = var.num_files
+  input = local.uppercase_words["nouns"]
 }
 
 resource "random_shuffle" "random_adjectives" {
-  input = var.words["adjectives"]
+  count = var.num_files
+  input = local.uppercase_words["adjectives"]
 }
 
 resource "random_shuffle" "random_verbs" {
-  input = var.words["verbs"]
+  count = var.num_files
+  input = local.uppercase_words["verbs"]
 }
 
 resource "random_shuffle" "random_adverbs" {
-  input = var.words["adverbs"]
+  count = var.num_files
+  input = local.uppercase_words["adverbs"]
 }
 
 resource "random_shuffle" "random_numbers" {
-  input = var.words["numbers"]
+  count = var.num_files
+  input = local.uppercase_words["numbers"]
 }
 
 output "mad_libs" {
