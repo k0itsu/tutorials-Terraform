@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "storage_account" {
 # storage container for azure - to store application source code and documents in a nosql db
 resource "azurerm_storage_container" "storage_container" {
   name                  = "serverless"
-  storage_acccount_name = azurerm_storage_account.storage_account.name
+  storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
 }
 
