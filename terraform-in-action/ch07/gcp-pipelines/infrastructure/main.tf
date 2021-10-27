@@ -85,3 +85,14 @@ resource "google_cloudbuild_trigger" "trigger" {
     }
   }
 }
+
+data "google_project" "project" {}
+
+resource "google_project_iam_member" "cloudbuild_roles" {
+  depends_on = [google_cloudbuild_trigger.trigger]
+  # grants the cloud build service account these 2 roles
+  for_each   = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
+  project    = var.project_id
+  role       = each.key
+  member     = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+}
