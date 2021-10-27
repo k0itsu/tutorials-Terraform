@@ -1,3 +1,8 @@
+# Cloud Source Repositories - A version-controlled Git source repository
+# Cloud Build - A CI tool for testing, building, publishing, and deploying code
+# Container Registry - For storing the built container images
+# Cloud Run - For running serverless containers on a managed k8s cluster
+
 locals {
   services = [
     "sourcerepo.googleapis.com",
@@ -115,4 +120,20 @@ resource "google_cloud_run_service" "service" {
       }
     }
   }
+}
+
+data "google_iam_policy" "admin" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "policy" {
+  location    = var.region
+  project     = var.project_id
+  service     = google_cloud_run_service.service.name
+  policy_data = data.google_iam_policy.admin.policy_data
 }
