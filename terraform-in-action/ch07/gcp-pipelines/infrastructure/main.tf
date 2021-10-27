@@ -96,3 +96,23 @@ resource "google_project_iam_member" "cloudbuild_roles" {
   role       = each.key
   member     = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }
+
+# code for configuring the cloud run service
+resource "google_cloud_run_service" "service" {
+  depends_on = [
+    google_project_service.enabled_service["run.googleapis.com"]
+  ]
+  name     = var.namespace
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        # required argument, so we have to set it to something otherwise
+        # terraform will throw an error if you tried to apply
+        # it will get overriden on first execution of cloud build
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
+      }
+    }
+  }
+}
