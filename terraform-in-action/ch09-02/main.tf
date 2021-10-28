@@ -87,7 +87,7 @@ resource "aws_instance" "ansible_server" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -u ubuntu --key-file ansible-key.pem -T 300 -i '${self.public_ip},', app.yaml"
+    command = "ansible-playbook -u ubuntu --key-file ansible-key.pem -T 300 -i '${self.public_ip},', app.yml"
   }
 }
 
@@ -96,5 +96,5 @@ output "public_ip" {
 }
 
 output "ansible_command" {
-  value = "ansible-playbook -u ubuntu --key-file ansible-key.pem -T 300 -i '${aws_instance.ansible_server.public_ip},', app.yaml"
+  value = "ansible-playbook -u ubuntu --key-file ansible-key.pem -T 300 -i '${aws_instance.ansible_server.public_ip},', app.yml"
 }
