@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "tls_private_key" "key" {
-  algorith = "RSA"
+  algorithm = "RSA"
 }
 
 resource "local_file" "private_key" {
