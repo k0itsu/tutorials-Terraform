@@ -9,3 +9,6 @@ venv
 
 # personal notes
 notes
+
+# misc os related files
+.DS_Store
