@@ -70,3 +70,31 @@ resource "aws_codebuild_project" "project" {
     buildspec = file("${path.module}/templates/buildspec_${local.projects[count.index]}.yml")
   }
 }
+
+
+# configuring environment variables
+locals {
+  # template for the backend configuration
+  backend = templatefile("${path.module}/templates/backend.json",
+    { config : var.s3_backend_config, name : local.namespace })
+  
+  # declare default environment variables
+  default_environment = {
+    # TF_IN_AUTOMATION - if set to a non-empty value, tf adjusts the output
+    # to avoid suggesting specific commands to run next
+    TF_IN_AUTOMATION  = "1"
+    # TF_INPUT - if set to 0, disables prompts for variables that don't have values set
+    TF_INPUT          = "0"
+    # CONFIRM_DESTROY - if set to 1, codebuild will queue a destroy run instead of a create run
+    CONFIRM_DESTROY   = "0"
+    # WORKING_DIRECTORY - a relative path in which to execute tf.
+    # defaults to the source code root directory.
+    WORKING_DIRECTORY = var.working_directory
+    # BACKEND - a json-encoded string that configures the remote backend.
+    BACKEND           = local.backend,
+  }
+
+  # merge default environment variables with user-supplied values
+  environment = jsonencode([for k, v in verge(local.default_environment, var.environment) : { name: k, value: v, type : "PLAINTEXT"}])
+}
+
