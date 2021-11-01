@@ -2,9 +2,15 @@ version: 0.2
 phases:
   build:
     commands:
+      # switch into the working directory of the source code as specified by the
+      # WORKING_DIRECTORY env variable
       - cd $WORKING_DIRECTORY
+      # write json that configures the s3 backend for remote state storage
       - echo $BACKEND >> backend.tf.json
+      # initialize terraform
       - terraform init
+      # if CONFIRM_DESTROY is set to 0, perform terraform plan.
+      # otherwise, perform a destroy plan (terraform plan -destroy)
       - |
         if [[ "$CONFIRM_DESTROY" == "0" ]]; then
           terraform plan
